@@ -64,10 +64,10 @@ public class Review extends BaseEntity {
     }
 
     public void update(String title, String content, Integer rating, String imageUrl) {
-        this.title = title;
-        this.content = content;
-        this.rating = rating;
-        this.imageUrl = imageUrl;
+        if(title != null && !title.isEmpty()){this.title = title;}
+        if(content != null && !content.isEmpty()){this.content = content;}
+        if(rating != null ){this.rating = rating;}
+        if(imageUrl != null && !imageUrl.isEmpty()){this.imageUrl = imageUrl;}
     }
 
     public void delete(){this.isDeleted = true;}

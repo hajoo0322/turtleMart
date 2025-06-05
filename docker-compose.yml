@@ -57,6 +57,44 @@ services:
     volumes:
       - minio_data:/data
 
+  elasticsearch:
+    build:
+      context: .
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      - http.cors.allow-methods=OPTIONS,HEAD,GET,POST,PUT,DELETE
+      - http.cors.allow-headers=X-Requested-With,Content-Type,Content-Length,Authorization
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+    command: >
+      bash -c "if [ ! -f /usr/share/elasticsearch/plugins/analysis-nori/plugin-descriptor.properties ]; then
+      elasticsearch-plugin install --batch analysis-nori; fi && /usr/local/bin/docker-entrypoint.sh"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9200 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  kibana:
+    image: 'kibana:8.15.1'
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+
 #  app:
 #    build:
 #      context: .
@@ -80,3 +118,4 @@ services:
 volumes:
   mysql_data:
   minio_data:
+  es_data:

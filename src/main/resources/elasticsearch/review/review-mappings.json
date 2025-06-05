@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "productId": {
+      "type": "long"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "title_anal"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "content_anal"
+    },
+    "rating": {
+      "type": "short"
+    }
+  }
+}

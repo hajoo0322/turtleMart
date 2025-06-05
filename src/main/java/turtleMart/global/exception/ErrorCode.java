@@ -76,7 +76,11 @@ public enum ErrorCode {
     MINIO_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "버킷 설정 중 문제 발생"),
     IMAGE_UPLOAD_FAILED(HttpStatus.BAD_GATEWAY, "이미지 업로드 중 문제가 발생하였습니다"),
     IMAGE_VIEW_FAILED(HttpStatus.BAD_GATEWAY, "이미지를 불러오는 도중 문제가 발생했습니다"),
-    SOFT_LOCK_CANT_ACCESS(HttpStatus.CONFLICT, "현재 다른요청을 처리중임으로 접근할수없습니다.");
+    SOFT_LOCK_CANT_ACCESS(HttpStatus.CONFLICT, "현재 다른요청을 처리중임으로 접근할수없습니다."),
+
+    //엘라스틱서치 관련
+    SEARCH_ERROR_RETRY_LATER(HttpStatus.INTERNAL_SERVER_ERROR, "검색 중 알수 없는 문제가 발생하였습니다. 잠시후 다시 시도해 주세요");
+
 
     private final HttpStatus httpStatus;
     private final String message;

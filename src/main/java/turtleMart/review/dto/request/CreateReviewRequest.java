@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public record CreateReviewRequest(@NotNull Long orderItemId,

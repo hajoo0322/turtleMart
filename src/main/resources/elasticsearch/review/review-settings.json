@@ -1,0 +1,36 @@
+{
+  "index": {
+    "analysis": {
+      "filter": {
+        "korean_stop": {
+          "type": "stop",
+          "stopwords_path": "stopwords/korean_stop.txt"
+        }
+      },
+        "analyzer": {
+          "title_anal": {
+            "type": "custom",
+            "tokenizer": "nori_tokenizer",
+            "filter": [
+              "lowercase",
+              "stop",
+              "korean_stop",
+              "snowball",
+              "unique"
+            ]
+          },
+          "content_anal": {
+            "type": "custom",
+            "tokenizer": "nori_tokenizer",
+            "filter": [
+              "lowercase",
+              "stop",
+              "korean_stop",
+              "snowball",
+              "unique"
+            ]
+          }
+        }
+      }
+    }
+  }
