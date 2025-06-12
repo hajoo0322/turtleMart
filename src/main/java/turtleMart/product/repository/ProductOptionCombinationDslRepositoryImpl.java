@@ -33,6 +33,7 @@ public class ProductOptionCombinationDslRepositoryImpl implements ProductOptionC
         QProduct product = QProduct.product;
         QSeller seller = QSeller.seller;
         return jpaQueryFactory.select(productOptionCombination)
+                .from(productOptionCombination)
                 .join(productOptionCombination.product,product).fetchJoin()
                 .join(productOptionCombination.product.seller,seller).fetchJoin()
                 .where(productOptionCombination.id.eq(productOptionCombinationId))

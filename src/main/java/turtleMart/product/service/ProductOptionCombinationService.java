@@ -7,8 +7,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import turtleMart.global.common.OperationType;
 import turtleMart.global.exception.*;
+import turtleMart.global.kafka.dto.OperationWrapperDto;
+import turtleMart.global.kafka.enums.OperationType;
 import turtleMart.global.slack.SlackNotifier;
 import turtleMart.global.utill.JsonHelper;
 import turtleMart.member.entity.Seller;
@@ -52,6 +53,9 @@ public class ProductOptionCombinationService {
 
     @Value("${server.id}")
     private String serverId;
+
+    @Value("${kafka.topic.order}")
+    private String orderTopic;
 
     @Transactional
     public ProductOptionCombinationResponseCreate createProductOptionCombination(List<ProductOptionCombinationRequest> productOptionCombinationRequest, Long memberId, Long productId) {
@@ -126,9 +130,13 @@ public class ProductOptionCombinationService {
         redisTemplate.opsForValue().set(priceChangeRedisKey,false, Duration.ofMinutes(4));
 
         String operationId = serverId + ":" + UUID.randomUUID();
-        ProductOptionCombinationPriceDto productOptionCombinationPriceDto = ProductOptionCombinationPriceDto.of(productOptionCombinationId, price,operationId,OperationType.PRICE_CHANGE);
+        ProductOptionCombinationPriceDto productOptionCombinationPriceDto = ProductOptionCombinationPriceDto.of(productOptionCombinationId, price,operationId, OperationType.PRICE_CHANGE);
         String payload = JsonHelper.toJson(productOptionCombinationPriceDto);
-        kafkaTemplate.send("order_make_topic", productOptionCombinationId.toString(), payload);
+
+        OperationWrapperDto wrapperDto = OperationWrapperDto.from(OperationType.PRICE_CHANGE, payload);
+        String value = JsonHelper.toJson(wrapperDto);
+
+        kafkaTemplate.send("order_make_topic", productOptionCombinationId.toString(), value);
 
         return operationId;
     }
@@ -216,5 +224,30 @@ public class ProductOptionCombinationService {
             log.info("✅ [{}]의 재고가 {}개 복원되었습니다! (OptionCombinationId: {})", orderItem.getName(), quantity, productOptionCombinationId);
         }
         log.info("✅ 주문 ID {}의 모든 재고 복원 작업이 완료되었습니다.", orderId);
+    }
+
+    @Transactional
+    public void changePrice(ProductOptionCombinationPriceDto priceDto, OperationWrapperDto wrapperDto, String key) {
+        Long combinationId = priceDto.productOptionCombinationId();
+        Integer newPrice = priceDto.price();
+        String lockKey = "softLock:priceChange:combination:" + combinationId;
+
+        ProductOptionCombination combination = productOptionCombinationRepository.findById(combinationId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_OPTION_COMBINATION_NOT_FOUND));
+        Integer currentPrice = combination.getPrice();
+
+        // 가격 변경
+        if (!newPrice.equals(currentPrice)) {
+            combination.updatePrice(newPrice);
+            log.info("✅ 가격 변경 감지 및 반영 완료: combinationId={}", combinationId);
+        } else {
+            log.info("❌ 가격 변동 없음: combinationId={}", combinationId);
+        }
+
+        // soft Lock 해제
+        redisTemplate.delete(lockKey);
+        log.info("🔓 soft lock 해제 완료: {}", lockKey);
+
+        redisTemplate.opsForValue().set("status:" + priceDto.operationId(), true, Duration.ofMinutes(5));
     }
 }

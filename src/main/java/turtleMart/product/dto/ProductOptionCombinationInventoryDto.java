@@ -1,6 +1,7 @@
 package turtleMart.product.dto;
 
-import turtleMart.global.common.OperationType;
+
+import turtleMart.global.kafka.enums.OperationType;
 
 public record ProductOptionCombinationInventoryDto(
         Long productOptionCombinationId,

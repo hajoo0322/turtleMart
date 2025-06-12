@@ -63,4 +63,8 @@ public class ProductOptionCombination {
     public void increaseInventory(Integer quantity) {
         this.inventory += quantity;
     }
+
+    public void updatePrice(Integer newPrice) {
+        this.price = newPrice;
+    }
 }

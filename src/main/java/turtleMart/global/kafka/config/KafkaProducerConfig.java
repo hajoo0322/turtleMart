@@ -24,7 +24,9 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactoryForString() {
-        return new DefaultKafkaProducerFactory<>(new HashMap<>());
+        Map<String, Object> configProps = getConfigProps();
+
+        return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
