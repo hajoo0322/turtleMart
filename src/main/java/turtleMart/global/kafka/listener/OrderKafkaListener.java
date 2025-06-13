@@ -19,7 +19,7 @@ public class OrderKafkaListener {
 
     private final OrderService orderService;
 
-    @KafkaListener(topics = "order_create_topic", groupId = "order-group")
+    @KafkaListener(topics = "${kafka.topic.order.create}", groupId = "order-group")
     public void listenOrderCreate(@Header(KafkaHeaders.RECEIVED_KEY) String key, String value) {
 
         OperationWrapperDto wrapperDto = JsonHelper.fromJson(value, OperationWrapperDto.class);
