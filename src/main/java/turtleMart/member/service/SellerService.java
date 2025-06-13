@@ -21,6 +21,7 @@ import turtleMart.security.JwtUtil;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SellerService {
     private final SellerRepository sellerRepository;
     private final MemberRepository memberRepository;
@@ -32,7 +33,6 @@ public class SellerService {
     /**
      * 판매자 등록
      */
-    @Transactional
     public TokenResponse registerSeller(Long authId, SellerRegisterRequest request) {
         Member foundMember = memberRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException(""));
@@ -67,7 +67,6 @@ public class SellerService {
     /**
      * 판매자 수정
      */
-    @Transactional
     public SellerResponse updateSellerProfile(Long authId, Long sellerId, UpdateSellerRequest request) {
         Seller foundSeller = findSeller(sellerId);
         validSellerById(authId, foundSeller);
@@ -80,7 +79,6 @@ public class SellerService {
     /**
      * 판매자 삭제
      */
-    @Transactional
     public TokenResponse deleteSeller(Long authId, Long sellerId, DeleteSellerRequest request) {
         Seller foundSeller = findSeller(sellerId);
         validSellerById(authId, foundSeller);
@@ -127,4 +125,9 @@ public class SellerService {
         long expiration = jwtUtil.extractExpiration(oldToken).getTime();
         blacklistService.blacklistToken(oldToken, expiration);
     }
+
+//    public String ckeckUser() {
+//        // 테스트용 api
+//        return "접근 성공";
+//    }
 }

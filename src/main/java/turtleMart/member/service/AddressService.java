@@ -15,10 +15,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AddressService {
     private final AddressRepository addressRepository;
 
-    @Transactional
     public AddressResponse registerAddress(AddressRegisterRequest request) {
         Address address = Address.of(request);
         Address savedAddress = addressRepository.save(address);
@@ -40,7 +40,6 @@ public class AddressService {
         return addressList.stream().map(AddressResponse::from).toList();
     }
 
-    @Transactional
     public AddressResponse modifyAddress(Long addressId, UpdateAddressRequest request) {
         Address foundAddress = findAddress(addressId);
         foundAddress.updateAddress(request);
@@ -48,7 +47,6 @@ public class AddressService {
         return AddressResponse.from(foundAddress);
     }
 
-    @Transactional
     public String deleteAddress(Long addressId) {
         Address foundAddress = findAddress(addressId);
         addressRepository.delete(foundAddress);

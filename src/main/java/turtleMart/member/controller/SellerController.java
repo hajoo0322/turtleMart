@@ -13,6 +13,7 @@ import turtleMart.member.dto.response.SellerResponse;
 import turtleMart.member.dto.response.TokenResponse;
 import turtleMart.member.service.SellerService;
 import turtleMart.security.AuthUser;
+import turtleMart.security.CheckRole;
 
 @RestController
 @RequestMapping("/members/sellers")
@@ -65,4 +66,12 @@ public class SellerController {
         TokenResponse response = sellerService.deleteSeller(authUser.memberId(), sellerId, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+//    @CheckRole("SELLER")
+//    @GetMapping("/any")
+//    public ResponseEntity<String> checkUserRole() {
+//        // 테스트용 api
+//        String resultMessage = sellerService.ckeckUser();
+//        return ResponseEntity.status(HttpStatus.OK).body(resultMessage);
+//    }
 }

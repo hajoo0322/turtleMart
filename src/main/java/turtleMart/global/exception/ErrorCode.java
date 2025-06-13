@@ -30,8 +30,17 @@ public enum ErrorCode {
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 주소입니다."),
     ADDRESS_NOT_REGISTER(HttpStatus.NOT_FOUND, "등록된 주소가 없습니다."),
 
+    // 카드 관련
+    CARD_NOT_REGISTER(HttpStatus.NOT_FOUND, "등록된 카드가 없습니다."),
+
+    // 계좌 관련
+    ACCOUNT_NOT_REGISTER(HttpStatus.NOT_FOUND, "등록된 계좌가 없습니다."),
+
     //권한 관련
     FORBIDDEN(HttpStatus.FORBIDDEN,"접근권한이 없습니다."),
+
+    //인증 관련
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
 
     //상품 관련
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 상품입니다."),

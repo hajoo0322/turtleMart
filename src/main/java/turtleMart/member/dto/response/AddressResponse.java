@@ -4,16 +4,22 @@ import turtleMart.member.entity.Address;
 
 public record AddressResponse(
         Long addressId,
-        String name,
+        String addressName,
+        String receiverName,
         String address,
-        String detailAddress
+        String detailAddress,
+        String receiverPhone,
+        String shippingRequirement
 ) {
     public static AddressResponse from(Address address) {
         return new AddressResponse(
                 address.getId(),
-                address.getName(),
+                address.getAddressName(),
+                address.getReceiverName(),
                 address.getAddress(),
-                address.getDetailAddress()
+                address.getDetailAddress(),
+                address.getReceiverPhone(),
+                address.getShippingRequirement()
         );
     }
 }

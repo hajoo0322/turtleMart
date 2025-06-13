@@ -15,6 +15,7 @@ import turtleMart.member.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -25,7 +26,6 @@ public class MemberService {
         return MemberResponse.from(foundMember);
     }
 
-    @Transactional
     public MemberResponse updateProfile(Long authId, updateProfileRequest request) {
         Member foundMember = getMember(authId);
         verifyPassword(request.password(), foundMember);
@@ -38,7 +38,6 @@ public class MemberService {
         return MemberResponse.from(foundMember);
     }
 
-    @Transactional
     public String updatePassword(Long authId, updatePasswordRequest request) {
         Member foundMember = getMember(authId);
         verifyPassword(request.oldPassword(), foundMember);
@@ -49,7 +48,6 @@ public class MemberService {
     }
 
     // Todo: 소프트딜리트로 바꿔야 할지...
-    @Transactional
     public String withdrawMember(Long authId, MemberWithdrawRequest request) {
         Member foundMember = getMember(authId);
         verifyPassword(request.password(), foundMember);

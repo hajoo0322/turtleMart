@@ -22,33 +22,51 @@ public class Address extends BaseEntity {
     @JoinColumn
     private Member member;
 
-    private String name;
+    private String addressName;
+
+    private String receiverName;
 
     private String address;
 
     private String detailAddress;
 
-    private String receiverName;
-
     private String receiverPhone;
 
-    public Address(String name, String address, String detailAddress) {
-        this.name = name;
+    private String shippingRequirement;
+
+    public Address(
+            String addressName,
+            String receiverName,
+            String address,
+            String detailAddress,
+            String receiverPhone,
+            String shippingRequirement
+    ) {
+        this.addressName = addressName;
+        this.receiverName = receiverName;
         this.address = address;
         this.detailAddress = detailAddress;
+        this.receiverPhone = receiverPhone;
+        this.shippingRequirement = shippingRequirement;
     }
 
     public static Address of(AddressRegisterRequest request) {
         return new Address(
-                request.name(),
+                request.addressName(),
+                request.receiverName(),
                 request.address(),
-                request.detailAddress()
+                request.detailAddress(),
+                request.receiverPhone(),
+                request.shippingRequirement()
         );
     }
 
     public void updateAddress(UpdateAddressRequest request) {
-        this.name = request.name() != null ? request.name() : this.name;
+        this.addressName = request.addressName() != null ? request.addressName() : this.addressName;
+        this.receiverName = request.receiverName() != null ? request.receiverName() : this.receiverName;
         this.address = request.address() != null ? request.address() : this.address;
         this.detailAddress = request.detailAddress() != null ? request.detailAddress() : this.detailAddress;
+        this.receiverPhone = request.receiverPhone() != null ? request.receiverPhone() : this.receiverPhone;
+        this.shippingRequirement = request.shippingRequirement() != null ? request.shippingRequirement() : this.shippingRequirement;
     }
 }

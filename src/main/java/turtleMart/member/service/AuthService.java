@@ -41,7 +41,7 @@ public class AuthService {
     /**
      * 이메일 로그인
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public TokenResponse emailLogin(EmailLoginRequest request) {
         Member member = memberRepository.findMemberByEmail(request.email())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.EMAIL_NOT_FOUND));
@@ -53,6 +53,7 @@ public class AuthService {
     /**
      * 휴대폰 번호 로그인
      */
+    @Transactional(readOnly = true)
     public TokenResponse phoneNumberLogin(PhoneNumberLoginRequest request) {
         Member member = memberRepository.findMemberByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PHONE_NUMBER_NOT_FOUND));
